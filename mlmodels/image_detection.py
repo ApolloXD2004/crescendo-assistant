@@ -80,4 +80,6 @@ image, coords, emotion_status = detect_face(path, cascadeClassifier)
 cv2.imwrite(("(editied)" + path), image)
 
 
+
 print(emotion_status)
+

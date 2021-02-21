@@ -79,6 +79,9 @@ def home(request):
 
         cv2.imwrite(("(editied)" + path), image)
 
+        os.remove('media/blabla.jpg')
+        
+
     
         if (emotionstatus):
             print(emotionstatus)
@@ -88,7 +91,7 @@ def home(request):
             
     else:
         form = ImageForm()
-    return render(request, 'index.html', {'form': form})
+        return render(request, 'index.html', {'form': form})
 
 
 def camera(request):
@@ -103,74 +106,75 @@ def modelate(request):
         filename = 'found/testImage.jpg'
         with open(filename, 'wb') as f:
             f.write(imgdata)
+        try:
+            path = "found/testImage.jpg"
+            model = load_model("mlmodels/emotion_detection.h5")
+            size = (48, 48)
 
-        path = "found/testImage.jpg"
-        model = load_model("mlmodels/emotion_detection.h5")
-        size = (48, 48)
-
-        def _resize_image(image, size):
-            return cv2.resize(image,
+            def _resize_image(image, size):
+                return cv2.resize(image,
                               dsize=(size[0], size[1]),
                               interpolation=cv2.INTER_LINEAR)
 
-        emotion_classes = [
+            emotion_classes = [
             "angry", "fear", "disgust", "happy", "sad", "surprised", "neutral"
-        ]
+            ]
 
-    def detect_emotion(image):
-        emotion = model.predict(image)
-        emotion_nums = max(emotion)
-        emotion_index = np.argmax(emotion)
-        real_emotion = emotion_classes[emotion_index]
-        real_emotion = real_emotion.capitalize()
-        return real_emotion
+            def detect_emotion(image):
+                emotion = model.predict(image)
+                emotion_nums = max(emotion)
+                emotion_index = np.argmax(emotion)
+                real_emotion = emotion_classes[emotion_index]
+                real_emotion = real_emotion.capitalize()
+                return real_emotion
 
-    def create_facial_boundary(path, classifier):
-        image = cv2.imread(path)
-        grayScaled = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        faces = cascadeClassifier.detectMultiScale(grayScaled, 1.1, 10)
-        coords = []
-        color = {
-            "black": (0, 0, 0),
-            "orange": (0, 145, 255),
-            "white": (255, 255, 255)
-        }
-        for (x, y, w, h) in faces:
-            cv2.rectangle(image, (x, y), (x + w, y + h), color["orange"], 2)
-            the_face = image[y:y + h, x:x + w]
-            gray_scaled = cv2.cvtColor(the_face, cv2.COLOR_BGR2GRAY)
-            the_face = np.resize(gray_scaled, model.input_shape[1:3])
-            the_face = np.expand_dims(the_face, 0)
-            the_face = np.expand_dims(the_face, -1)
-            real_emotion = detect_emotion(the_face)
-            cv2.putText(image, real_emotion, (x, y - 4),
-                        cv2.FONT_HERSHEY_PLAIN, 2, color["white"], 2)
+            def create_facial_boundary(path, classifier):
+                image = cv2.imread(path)
+                grayScaled = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+                faces = cascadeClassifier.detectMultiScale(grayScaled, 1.1, 10)
+                coords = []
+                color = {
+                    "black": (0, 0, 0),
+                    "orange": (0, 145, 255),
+                    "white": (255, 255, 255)
+                }
+                for (x, y, w, h) in faces:
+                    cv2.rectangle(image, (x, y), (x + w, y + h), color["orange"], 2)
+                    the_face = image[y:y + h, x:x + w]
+                    gray_scaled = cv2.cvtColor(the_face, cv2.COLOR_BGR2GRAY)
+                    the_face = np.resize(gray_scaled, model.input_shape[1:3])
+                    the_face = np.expand_dims(the_face, 0)
+                    the_face = np.expand_dims(the_face, -1)
+                    real_emotion = detect_emotion(the_face)
+                    cv2.putText(image, real_emotion, (x, y - 4),
+                                cv2.FONT_HERSHEY_PLAIN, 2, color["white"], 2)
 
-        coords = [x, y, w, h]
+                coords = [x, y, w, h]
 
-        return coords, image, real_emotion
+                return coords, image, real_emotion
 
-    def detect_face(image, cascadeClassifier):
-        coords, image, real_emotion = create_facial_boundary(
-            image, cascadeClassifier)
+            def detect_face(image, cascadeClassifier):
+                coords, image, real_emotion = create_facial_boundary(
+                image, cascadeClassifier)
 
-        return image, coords, real_emotion
+                return image, coords, real_emotion
 
-    cascadeClassifier = cv2.CascadeClassifier(
-        "mlmodels/haarcascade_frontalface_default.xml")
+            cascadeClassifier = cv2.CascadeClassifier(
+            "mlmodels/haarcascade_frontalface_default.xml")
 
-    image, coords, emotionstatus = detect_face(path, cascadeClassifier)
+            image, coords, emotionstatus = detect_face(path, cascadeClassifier)
 
-    cv2.imwrite(("(editied)" + path), image)
+            cv2.imwrite(('media/heroku.jpg'),image)
+            os.remove('found/testImage.jpg')
 
-    print(f)
-    if (emotionstatus):
-        print(emotionstatus)
-        return render(request, 'emotionfound.html',
-                      {'emotionstatus': emotionstatus})
-    else:
-        return render(request, 'error.html')
-
+            
+            
+            print(emotionstatus)
+            return render(request, 'emotionfound.html',
+                        {'emotionstatus': emotionstatus})
+        
+        except:
+            return render(request,'error.html')
 
 
 
