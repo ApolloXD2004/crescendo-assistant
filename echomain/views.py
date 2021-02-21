@@ -165,7 +165,7 @@ def modelate(request):
             image, coords, emotionstatus = detect_face(path, cascadeClassifier)
 
             cv2.imwrite(('media/heroku.jpg'),image)
-            os.remove('found/testImage.jpg')
+            
 
             
             
