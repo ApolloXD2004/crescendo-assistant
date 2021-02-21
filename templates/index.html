@@ -1,0 +1,121 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Navbar</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+              <a class="nav-link" href="#">Features</a>
+              <a class="nav-link" href="#">About</a>
+             
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div class="xd">
+        <h1 id="xd">EMOTION BOOK</h1>
+      </div>
+    
+    
+
+    <div class="maindiv">
+        
+        <div class="firstdiv">
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label>Choose From Files</label><br>
+                {{ form.as_p }}
+                <button type="submit">Upload</button>
+            </form>
+
+        </div>
+      
+        <div class="seconddiv">
+            
+        <form action='/camera/' method="POST">
+            {% csrf_token %}
+            <label >Or Use your webcam</label><br>
+
+            <input type="submit" value="Open Webcam">
+        </form>
+
+        </div>
+    
+    
+    
+        
+     
+    
+
+    </div>
+  
+   
+
+
+
+
+    <script src="app.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/webcam-easy/dist/webcam-easy.min.js"></script>
+
+
+
+    <style>
+        img{
+            height: 440px;
+            width: 440px;
+        }
+
+        .maindiv{
+            display: flex;
+            margin-left: 35%;
+            margin-right: 65%;
+        }
+
+        .firstdiv{
+            border: 1px solid white;
+            padding: 10px;
+        }
+
+        .seconddiv{
+            border: 1px solid white;
+            width: 280px;
+            padding: 10px;
+        }
+        body{
+            background-image: url(https://wallpaperaccess.com/download/emotions-2008455);
+        }
+        h1{
+            color: green;
+            margin-left: 42%;
+            margin-right: 65%;
+           
+        }
+
+        label{
+            color: white;
+        }
+
+        .xd{
+            text-align: center;
+        }
+
+    </style>
+</body>
+
+</html>
