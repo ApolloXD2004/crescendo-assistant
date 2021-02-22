@@ -16,7 +16,7 @@ form = ImageForm()
 def home(request):
     if request.method == 'POST':
            
-        try: 
+         
             form = ImageForm(request.POST, request.FILES)
             imagename = request.FILES['image'].name
             print(imagename)
@@ -88,8 +88,8 @@ def home(request):
                         {'emotionstatus': emotionstatus})
                       
                 # Get the current instance object to display in the template
-        except:
-            return render(request,'error.html')    
+       
+                
                 
                
     else:
