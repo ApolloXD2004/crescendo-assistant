@@ -9,6 +9,6 @@ def get_path_and_name(instance, filename):
      return new_name
 
 class Image(models.Model):
-    image = models.ImageField(upload_to=get_path_and_name)
+    image = models.ImageField(upload_to=get_path_and_name,storage=OverwriteStorage())
 
    
