@@ -16,12 +16,15 @@ form = ImageForm()
 def home(request):
     if request.method == 'POST':
            
+        try: 
             form = ImageForm(request.POST, request.FILES)
+            imagename = request.FILES['image'].name
+            print(imagename)
             if form.is_valid():
                 form.save()
+        
             
-            
-            path = "media/blabla.jpg"
+            path = "media/"+imagename
             model = load_model("mlmodels/emotion_detection.h5")
             size = (48, 48)
 
@@ -80,11 +83,14 @@ def home(request):
 
             cv2.imwrite(('media/manualfacedetect.jpg'),image)
             print(emotionstatus)
+            os.remove('media/'+imagename)  
             return render(request, '2emotionfound.html',
                         {'emotionstatus': emotionstatus})
+                      
                 # Get the current instance object to display in the template
-        
+        except:
             return render(request,'error.html')    
+                
                
     else:
         form = ImageForm()
@@ -160,6 +166,8 @@ def modelate(request):
             "mlmodels/haarcascade_frontalface_default.xml")
 
             image, coords, emotionstatus = detect_face(path, cascadeClassifier)
+
+           
 
             cv2.imwrite(('media/facedetect.jpg'),image)
             
