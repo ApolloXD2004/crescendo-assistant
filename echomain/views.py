@@ -18,13 +18,19 @@ def home(request):
            
          
             form = ImageForm(request.POST, request.FILES)
-            imagename = request.FILES['image'].name
-            print(imagename)
-            if form.is_valid():
-                form.save()
+            imageop = request.FILES['image']
+            encodedimg =  base64.b64encode(imageop.read())
+            decodedimg = base64.b64decode(encodedimg)
+            filename = 'found/manualimg.jpg'
+            
+            with open(filename, 'wb') as f:
+                f.write(decodedimg)
+
+            
+            
         
             
-            path = "media/"+imagename
+            path = filename
             model = load_model("mlmodels/emotion_detection.h5")
             size = (48, 48)
 
@@ -83,7 +89,7 @@ def home(request):
 
             cv2.imwrite(('media/manualfacedetect.jpg'),image)
             print(emotionstatus)
-            os.remove('media/'+imagename)  
+              
             return render(request, '2emotionfound.html',
                         {'emotionstatus': emotionstatus})
                       
